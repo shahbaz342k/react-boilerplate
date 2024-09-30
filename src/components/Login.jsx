@@ -14,6 +14,8 @@ const Login = () => {
     const [isResponseGet, setIsResponseGet] = useState(false);
     const [alerType, setAlerType] = useState('success')
     const navigate = useNavigate();
+
+
     // const { login } = useAuth();
 
     const onFinish = (values) => {
@@ -42,13 +44,21 @@ const Login = () => {
 
     }
 
+    useEffect(() => {
+        const isAuthenticated = !!localStorage.getItem('adminAuth');  // Simple token-based check
+        console.log('Login ', isAuthenticated)
+        if (isAuthenticated) {
+            navigate('/dashboard/home')
+        }
+    }, [])
+
     const handleSubmit = async () => {
         console.log('handleSubmit', APIBASEURL);
         console.log('payload ', creteUserPayload);
         setIsResponseGet(false);
         let form = document.getElementById('basic');
         try {
-            if (creteUserPayload.isValid) {
+            if (isFormValid) {
                 let payload = {
                     email: creteUserPayload.email,
                     password: creteUserPayload.password,
@@ -62,7 +72,7 @@ const Login = () => {
                     form.reset();
                     localStorage.setItem('adminAuth', data.token);
                     // login(data.token)
-                    setTimeout(() => navigate('/admin/dashboard'), 1000)
+                    setTimeout(() => navigate('/dashboard/home'), 1000)
                     // navigate('/users');
 
                 }
@@ -77,11 +87,7 @@ const Login = () => {
         // const {data} = await axios.get(`${APIBASEURL}/users`);
         // console.log('data api', data);
     }
-    useEffect(() => {
-        if (localStorage.getItem('adminAuth')) {
-            // navigate('/admin/dashboard');
-        }
-    }, [])
+   
 
 
     return (
@@ -118,6 +124,10 @@ const Login = () => {
                         style={{ maxWidth: 600 }}
                         initialValues={{ remember: true }}
                         autoComplete="off"
+                        form={form}
+                        // layout="vertical"
+                        onFinish={onFinish}              // Called on successful validation
+                        onFinishFailed={onFinishFailed}  // Called on validation failure
                     >
 
                         <Form.Item

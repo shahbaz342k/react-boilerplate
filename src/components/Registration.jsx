@@ -176,11 +176,11 @@ const Registration = () => {
                             label="Password"
                             name="password"
                             rules={[
-                            { required: true, message: 'Please input your Password!' },
-                            { min: 6, message: 'Name must be at least 6 characters long' },
-                            { max: 50, message: 'Name cannot be longer than 50 Password' },
-                            { whitespace: true, message: 'Name cannot be empty spaces' },
-                        ]}
+                              { required: true, message: 'Please input your Password!' },
+                              { min: 6, message: 'Name must be at least 6 characters long' },
+                              { max: 50, message: 'Name cannot be longer than 50 Password' },
+                              { whitespace: true, message: 'Name cannot be empty spaces' },
+                            ]}
                         >
                             <Input.Password name='password' onChange={handleChange} />
                         </Form.Item>

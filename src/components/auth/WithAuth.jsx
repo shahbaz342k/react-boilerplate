@@ -1,15 +1,20 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
 // Higher Order Component for Protected Routes
 const WithAuth = (WrappedComponent) => {
   return (props) => {
-    const isAuthenticated = !!localStorage.getItem('authToken');  // Simple token-based check
-
+    const isAuthenticated = !!localStorage.getItem('adminAuth');  // Simple token-based check
+    console.log('Authent ', isAuthenticated)
     if (isAuthenticated) {
+        console.log('if app js')
+
       return <WrappedComponent {...props} />;
     } else {
-      return <Redirect to="/login" />;
+        console.log('else app js')
+        // return <Redirect to="/login" />;
+        // redirect('/login');
+        window.location.href = '/login'
     }
   };
 };
