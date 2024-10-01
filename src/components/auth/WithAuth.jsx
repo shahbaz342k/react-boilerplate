@@ -4,7 +4,7 @@ import { redirect } from 'react-router-dom';
 // Higher Order Component for Protected Routes
 const WithAuth = (WrappedComponent) => {
   return (props) => {
-    const isAuthenticated = !!localStorage.getItem('adminAuth');  // Simple token-based check
+    const isAuthenticated = !!localStorage.getItem('userAuth');  // Simple token-based check
     console.log('Authent ', isAuthenticated)
     if (isAuthenticated) {
         console.log('if app js')
