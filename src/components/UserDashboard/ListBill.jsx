@@ -23,10 +23,26 @@ const ListBill = () => {
 
     const handleDelete = async (e) => {
         console.log('delete', e.target.value);
-        setIsUserDeleted(false);
+        const payload ={
+            "employee_id":localStorage.getItem('employee_Id'),
+            "id":e.target.value
+        }
+        console.log('payload',payload);
+        try {
+            const response = await axios.post(`${APIBASEURL}/bills/delete`, payload);
+            console.log('data api', response.data);
+            setData(response.data.message);
+            setLoader(false);
+            setIsUserDeleted(response.data.status);
+            window.location.reload();
+
+        } catch (error) {
+            setLoader(false)
+            console.error('Error fetching data:', error);
+        }
+        // setIsUserDeleted(false);
 
 
-        return;
         // try {
         //     const { data } = await axios.delete(`${APIBASEURL}/bills/get/${e.target.value}`);
         //     console.log(data);
@@ -39,21 +55,22 @@ const ListBill = () => {
         
     }
 
-    function convertTimestampToDate(timestamp) {
-        // Convert the timestamp to a Date object (timestamp could be in seconds, so multiply by 1000 if needed)
-        const date = new Date(timestamp * 1000); // Use * 1000 if the timestamp is in seconds, not milliseconds
-        
-        // Format the date to a human-readable string using toLocaleDateString
-        return date.toLocaleDateString('en-GB', { // Change 'en-GB' to your desired locale
-          day: '2-digit', 
-          month: '2-digit', 
-          year: 'numeric'
-        });
+    function formatTimestamp(timestamp) {
+        // Convert seconds to milliseconds if the timestamp is in seconds
+        if (timestamp && timestamp.toString()) {
+          timestamp *= 1000;
+        }
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are 0-based, so we add 1
+        const day = ('0' + date.getDate()).slice(-2);
+        const hours = ('0' + date.getHours()).slice(-2);
+        const minutes = ('0' + date.getMinutes()).slice(-2);
+        const seconds = ('0' + date.getSeconds()).slice(-2);
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       }
       
-      // Example usage
-      const timestamp = 1609459200; // Example timestamp in seconds (01 Jan 2021)
-      console.log(convertTimestampToDate(timestamp)); // Output: "01/01/2021"
+
       
 
     const columns = [
@@ -67,7 +84,7 @@ const ListBill = () => {
             title: 'Date',
             dataIndex: 'date',
             key: 'date',
-            render: (text) => <span>{convertTimestampToDate(text)}</span>,
+            render: (text) => <span>{formatTimestamp(text)}</span>,
         },
         {
             title: 'Amount',
