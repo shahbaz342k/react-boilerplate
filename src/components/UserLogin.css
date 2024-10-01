@@ -1,0 +1,57 @@
+
+  /* Login.css */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('file:///home/ginger/Downloads/parking_Home.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 80%;
+    max-width: 1200px;
+    gap: 20px;
+  }
+  
+  .gradient-text {
+    font-size: 48px;
+    font-weight: 700;
+    background: -webkit-linear-gradient(left, #4a3d86, #2733d6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center; /* For inline elements inside the block container */
+    display: block;     /* Ensures the element behaves like a block */
+    width: 100%;        /* Takes up full width to allow text centering */
+}
+  
+  /* Form Section */
+  .form-container {
+    flex: 1;
+    /* display: flex; */
+    justify-content: flex-start;
+    width:35%;
+  }
+  
+  .login-card {
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 22px;
+    text-align: center;
+  }
+  .center-align {
+    text-align: center;
+    font-size: 22px;
+  }
+  
+  .submit-button {
+    width: 200px; /* Adjust the width of the button if needed */
+  }
