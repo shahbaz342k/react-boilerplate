@@ -27,33 +27,52 @@ const ListBill = () => {
 
 
         return;
-        try {
-            const { data } = await axios.delete(`${APIBASEURL}/users/${e.target.value}`);
-            console.log(data);
-            setIsUserDeleted(data.success);
-        } catch (err) {
-            console.log('error', err.message);
-        }
+        // try {
+        //     const { data } = await axios.delete(`${APIBASEURL}/bills/get/${e.target.value}`);
+        //     console.log(data);
+        //     setIsUserDeleted(data.success);
+        // } catch (err) {
+        //     console.log('error', err.message);
+        // }
 
+
+        
     }
+
+    function convertTimestampToDate(timestamp) {
+        // Convert the timestamp to a Date object (timestamp could be in seconds, so multiply by 1000 if needed)
+        const date = new Date(timestamp * 1000); // Use * 1000 if the timestamp is in seconds, not milliseconds
+        
+        // Format the date to a human-readable string using toLocaleDateString
+        return date.toLocaleDateString('en-GB', { // Change 'en-GB' to your desired locale
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric'
+        });
+      }
+      
+      // Example usage
+      const timestamp = 1609459200; // Example timestamp in seconds (01 Jan 2021)
+      console.log(convertTimestampToDate(timestamp)); // Output: "01/01/2021"
+      
 
     const columns = [
         {
             title: 'ID',
-            dataIndex: '_id',
-            key: '_id',
+            dataIndex: 'id',
+            key: 'id',
         },
 
         {
-            title: 'Name',
-            dataIndex: 'username',
-            key: 'username',
-            render: (text) => <a>{text}</a>,
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (text) => <span>{convertTimestampToDate(text)}</span>,
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
         },
 
 
@@ -81,8 +100,8 @@ const ListBill = () => {
 
         {
             title: 'Action',
-            key: '_id',
-            dataIndex: '_id',
+            key: 'id',
+            dataIndex: 'id',
             render: (text) => {
                 return (<Space size="middle">
                     {/* <a>Invite {record.name}</a> */}
@@ -127,10 +146,15 @@ const ListBill = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            const payload ={
+                "employee_id":localStorage.getItem('employee_Id')
+            }
+            console.log('payload',payload);
             try {
-                const response = await axios.get(`${APIBASEURL}/users`);
+                const response = await axios.post(`${APIBASEURL}/bills/get`, {
+                });
                 console.log('data api', response.data);
-                setData(response.data.result);
+                setData(response.data.data);
                 setLoader(false)
             } catch (error) {
                 setLoader(false)
@@ -178,7 +202,7 @@ const ListBill = () => {
 
 
 
-            {!loader ? <Table dataSource={data} columns={columns} key={data._id} />
+            {!loader ? <Table dataSource={data} columns={columns} key={data.id} />
                 : <Skeleton active />}
 
 

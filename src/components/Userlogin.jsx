@@ -1,6 +1,6 @@
-import { Button, Card, Col, Form, Input, Row } from 'antd'
+import { Button, Card, Form, Input,} from 'antd'
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './/UserLogin.css';
 
@@ -10,7 +10,6 @@ const Userlogin = () => {
     const [form] = Form.useForm();
     const [creteUserPayload, setCreteUserPayload] = useState({ emp_id: '' });
     const [isFormValid, setIsFormValid] = useState(null); 
-    const [isCreated, setIsCreated] = useState(false);
     const navigate = useNavigate();
 
     const onFinish = (values) => {
@@ -48,10 +47,11 @@ const Userlogin = () => {
                 if (data.status) {
                     // setIsCreated(true);
                     // console.log('user login successfully', data.data.user.user_type);
-                    if(data.data.user.user_type == 1){
-                        localStorage.setItem('adminAuth', data.data.token);
+                    if(data.data.user.user_type === 1){
+                        localStorage.setItem('userAuth', data.data.token);
+                        localStorage.setItem('employee_Id', data.data.user.employee_id);
                         form.reset();
-                       setTimeout(() => navigate('/admin/dashboard'),2000)
+                       setTimeout(() => navigate('/dashboard/home'),2000)
                     }else{
                         localStorage.setItem('userAuth', data.data.token);
                         form.reset();
