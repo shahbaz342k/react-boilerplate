@@ -9,7 +9,7 @@ import {
     LogoutOutlined,
     DashboardOutlined,
     DeleteOutlined
-  } from '@ant-design/icons';
+} from '@ant-design/icons';
 import ConfirmModal from './modal/ConfirmModal';
 // const { Header, Content, Footer } = Layout;
 const APIBASEURL = process.env.REACT_APP_API_URL;
@@ -23,11 +23,11 @@ const ListBill = () => {
 
     const handleDelete = async (e) => {
         console.log('delete', e.target.value);
-        const payload ={
-            "employee_id":localStorage.getItem('employee_Id'),
-            "id":e.target.value
+        const payload = {
+            "employee_id": localStorage.getItem('employee_Id'),
+            "id": e.target.value
         }
-        console.log('payload',payload);
+        console.log('payload', payload);
         try {
             const response = await axios.post(`${APIBASEURL}/bills/delete`, payload);
             console.log('data api', response.data);
@@ -52,26 +52,39 @@ const ListBill = () => {
         // }
 
 
-        
+
     }
 
-    function formatTimestamp(timestamp) {
-        // Convert seconds to milliseconds if the timestamp is in seconds
-        if (timestamp && timestamp.toString()) {
-          timestamp *= 1000;
-        }
-        const date = new Date(timestamp);
+    function convertTimestampToReadableDate(timestamp) {
+        // Convert timestamp to a Date object
+        const date = new Date(Number (timestamp));
+        // console.log(date)
+        // return date.toGMTString()
+        // // Check if the date is valid
+        // if (isNaN(date.getTime())) {
+        //     return "Invalid date";
+        // }
+    
+        // Get the individual components of the date
         const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are 0-based, so we add 1
-        const day = ('0' + date.getDate()).slice(-2);
-        const hours = ('0' + date.getHours()).slice(-2);
-        const minutes = ('0' + date.getMinutes()).slice(-2);
-        const seconds = ('0' + date.getSeconds()).slice(-2);
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        // Format the date as YYYY-MM-DD HH:mm:ss
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-      }
-      
+    }
+    
+    // Example usage
+    // const timestamp = 1727807400000; // Example timestamp
+    // const readableDate = convertTimestampToReadableDate(timestamp);
+    // console.log(readableDate); // Output should be a valid date
+    
 
-      
+
+
 
     const columns = [
         {
@@ -84,7 +97,7 @@ const ListBill = () => {
             title: 'Date',
             dataIndex: 'date',
             key: 'date',
-            render: (text) => <span>{formatTimestamp(text)}</span>,
+            render: (text) => <span>{convertTimestampToReadableDate(text)}</span>,
         },
         {
             title: 'Amount',
@@ -163,10 +176,10 @@ const ListBill = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const payload ={
-                "employee_id":localStorage.getItem('employee_Id')
+            const payload = {
+                "employee_id": localStorage.getItem('employee_Id')
             }
-            console.log('payload',payload);
+            console.log('payload', payload);
             try {
                 const response = await axios.post(`${APIBASEURL}/bills/get`, {
                 });
@@ -192,9 +205,8 @@ const ListBill = () => {
 
     return (
         <>
-            {/* <Sidebar /> */}
-            <ConfirmModal />
-            {isUserDeleted ?
+            {/* <ConfirmModal /> */}
+            {/* {isUserDeleted ?
                 <Row justify={'center'} type="flex" align={'middle'}>
                     <Space direction="vertical">
                         <Alert
@@ -220,6 +232,37 @@ const ListBill = () => {
 
 
             {!loader ? <Table dataSource={data} columns={columns} key={data.id} />
+                : <Skeleton active />} */}
+
+
+
+            {/* <Sidebar /> */}
+            {isUserDeleted ?
+                <Row justify={'center'} type="flex" align={'middle'}>
+                    <Space direction="vertical">
+                        <Alert
+                            message={successMessage}
+                            type="success"
+                            showIcon
+                            action={
+
+                                <Button size="small" type="text">
+                                    UNDO
+                                </Button>
+                            }
+                            closable
+                        />
+                    </Space>
+
+
+
+                </Row>
+                : ''}
+
+
+
+
+            {!loader ? <Table dataSource={data} columns={columns} key={data._id} />
                 : <Skeleton active />}
 
 
@@ -241,6 +284,7 @@ const ListBill = () => {
                         })  
                     }
                  </div> */}
+
 
         </>
     )
