@@ -138,7 +138,7 @@ const UserLayout = () => {
               textAlign: 'center',
             }}
           >
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
+            Parking Management System ©{new Date().getFullYear()} Created by Nexus.
           </Footer>
 
         </Layout>

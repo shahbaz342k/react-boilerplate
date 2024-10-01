@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import './addBill.css';
 const APIBASEURL = process.env.REACT_APP_API_URL;
 
 const AddBill = () => {
@@ -133,10 +134,7 @@ const AddBill = () => {
                     setSuccessMessage("Date saved successfully");
                     // console.log('Expense added  successfully', data);
                     form.reset();
-                    // localStorage.setItem('adminAuth', data.token);
-                    // login(data.token)
-                    // setTimeout(() => navigate('/dashboard/home'), 1000)
-                    // navigate('/users');
+                    setTimeout(() => navigate('/dashboard/list-bills'),1000)
 
                 }
             }
@@ -155,94 +153,79 @@ const AddBill = () => {
 
 
     return (
-
         <>
+  {isResponseGet ? (
+    <Row justify="center" align="middle">
+      <Space direction="vertical">
+        <Alert
+          message={successMessage}
+          type={alerType}
+          showIcon
+          closable
+          className="custom-alert"
+        />
+      </Space>
+    </Row>
+  ) : (
+    ""
+  )}
 
-            {isResponseGet ?
-                <Row justify={'center'} type="flex" align={'middle'}>
-                    <Space direction="vertical">
-                        <Alert
-                            message={successMessage}
-                            type={alerType}
-                            showIcon
+  <Row justify="center" align="middle" style={{ minHeight: "100vh", backgroundImage: 'url("https://img.freepik.com/free-photo/abstract-blue-geometric-shapes-background_24972-1841.jpg?w=1380&t=st=1727788655~exp=1727789255~hmac=946629e7c1f1c1891f7462efbd72cd14d9475917031eaa2d02fb030dceb879c8")', }}>
+    <Col>
+      <div className="form-container">
+        <h2 className="form-title">Submit Your Parking Bill</h2>
+        <Form
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          initialValues={{ remember: true }}
+          autoComplete="off"
+          form={form}
+          onFinish={onFinish}              // Called on successful validation
+          onFinishFailed={onFinishFailed}  // Called on validation failure
+          className="custom-form"
+        >
+          <Form.Item
+            label="Add Amount"
+            name="amount"
+            rules={[{ required: true, message: "Please input your amount!" }]}
+            className="custom-label"
+          >
+            <Input name="amount" onChange={handleChange} />
+          </Form.Item>
 
-                            closable
-                        />
-                    </Space>
+          <Form.Item
+            label="Bill Date"
+            name="bill_date"
+            rules={[{ required: true, message: "Please input your bill date!" }]}
+            className="custom-label"
+          >
+            <DatePicker onChange={onChange} disabledDate={disabledDate} className="custom-datepicker" />
+          </Form.Item>
 
+          <Form.Item
+            label="Upload Receipt"
+            name="fileUrl"
+            rules={[{ required: true, message: "Please upload your receipt!" }]}
+            className="custom-label"
+          >
+            <Upload {...props}>
+              <Button icon={<UploadOutlined />} className="custom-upload-btn">Upload</Button>
+            </Upload>
+          </Form.Item>
 
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit" className="custom-submit-btn">
+              Add
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </Col>
+  </Row>
+</>
 
-                </Row>
-                : ""}
-
-
-
-            <Row justify={'center'} type="flex" align={'middle'} style={{ minHeight: '100vh' }}>
-
-                <Col>
-
-                    <Form
-                        name="basic"
-                        labelCol={{ span: 8 }}
-                        wrapperCol={{ span: 16 }}
-                        style={{ maxWidth: 600 }}
-                        initialValues={{ remember: true }}
-                        autoComplete="off"
-                        form={form}
-                        // layout="vertical"
-                        onFinish={onFinish}              // Called on successful validation
-                        onFinishFailed={onFinishFailed}  // Called on validation failure
-                    >
-
-                        <Form.Item
-                            label="Add Amount"
-                            name="amount"
-                            rules={[{ required: true, message: 'Please input your amount!' }]}
-                        >
-                            <Input name='amount' onChange={handleChange} />
-                        </Form.Item>
-
-
-                        <Form.Item
-                            label="Bill Date"
-                            name="bill_date"
-                            rules={[{ required: true, message: 'Please input your bill Date!' }]}
-                        >
-                            {/* <Input name='bill_date' onChange={handleChange} /> */}
-                            <DatePicker onChange={onChange}  disabledDate={disabledDate}  needConfirm />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Upload Reciept"
-                            name="fileUrl"
-                            rules={[{ required: true, message: 'Please input your Upload Receipt!' }]}
-                        >
-                                <Upload {...props} className='ml-10'>
-                                    <Button icon={<UploadOutlined />}>Upload</Button>
-                                </Upload>
-
-                           
-                        </Form.Item>
-
-
-
-
-
-
-                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                            <Button type="primary" htmlType="submit">
-                                Add
-                            </Button>
-                        </Form.Item>
-                    </Form>
-
-                </Col>
-
-            </Row>
-
-
-
-        </>
     )
 }
 export default AddBill;
