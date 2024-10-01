@@ -4,13 +4,14 @@ import { Col, Row, Space, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import moment from 'moment';
 const APIBASEURL = process.env.REACT_APP_API_URL;
 
 const AddBill = () => {
 
 
     const props = {
-        action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+        // action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
         listType: 'picture',
         beforeUpload(file) {
             return new Promise((resolve) => {
@@ -38,11 +39,18 @@ const AddBill = () => {
 
     const [form] = Form.useForm();        // Access form instance
     const [isFormValid, setIsFormValid] = useState(null);
+    const [uploadDate, setUploadDate] = useState('');
     const [formPayload, setFormPayload] = useState({ amount: '', billDate: '', uploadRecipient: '' });
-    const [successMessage, setSuccessMessage] = useState('LoggedIn successfully');
+    const [successMessage, setSuccessMessage] = useState('Added sucessfully');
     const [isResponseGet, setIsResponseGet] = useState(false);
     const [alerType, setAlerType] = useState('success')
     const navigate = useNavigate();
+
+
+    const disabledDate = (current) => {
+        // Disable dates before today and allow only today and future dates
+        return current && current < moment().startOf('day');
+    };
 
 
     // const { login } = useAuth();
@@ -59,12 +67,12 @@ const AddBill = () => {
         });
         setFormPayload((prev)=> {
             return {
-                ...prev, billDate: Date.now()
+                ...prev, billDate: uploadDate
             }
         });
         setFormPayload((prev)=> {
             return {
-                ...prev, uploadRecipient: 'values.amount'
+                ...prev, uploadRecipient: values.fileUrl.file.thumbUrl
             }
         });
 
@@ -81,6 +89,7 @@ const AddBill = () => {
 
     const onChange = (date, dateString) => {
         console.log(date, dateString);
+        setUploadDate(date.valueOf());
       };
 
 
@@ -104,22 +113,25 @@ const AddBill = () => {
         console.log('handleSubmit', APIBASEURL);
         setIsResponseGet(false);
         let form = document.getElementById('basic');
+        console.log('payload ', formPayload);
+        // return;
         try {
-            if (isFormValid) {
+            if (formPayload.amount && formPayload.billDate && formPayload.uploadRecipient) {
                 let payload = {
                     amount: formPayload.amount,
                     date: formPayload.billDate,
                     receipt_url: formPayload.uploadRecipient,
+                    employee_id: 'sanjev123',
 
                 }
-                console.log('payload ', formPayload);
 
                 const { data } = await axios.post(`${APIBASEURL}/bills/save`, payload);
                 console.log('insert data api', data);
-                if (data.success) {
+                if (data.status == true) {
+                    setAlerType('success');
                     setIsResponseGet(true);
-                    setSuccessMessage("LoggedIn successfully");
-                    console.log('Expense added  successfully', data);
+                    setSuccessMessage("Date saved successfully");
+                    // console.log('Expense added  successfully', data);
                     form.reset();
                     // localStorage.setItem('adminAuth', data.token);
                     // login(data.token)
@@ -129,10 +141,11 @@ const AddBill = () => {
                 }
             }
         } catch (err) {
-            console.log('form error handle', err.response.data.result);
+            console.log('form error handle', err);
+            // console.log('form error handle', err.response.data.result);
             setIsResponseGet(true);
             setAlerType('error');
-            setSuccessMessage(err.response.data.result);
+            // setSuccessMessage(err.response.data.result);
 
         }
         // const {data} = await axios.get(`${APIBASEURL}/users`);
@@ -196,7 +209,7 @@ const AddBill = () => {
                             rules={[{ required: true, message: 'Please input your bill Date!' }]}
                         >
                             {/* <Input name='bill_date' onChange={handleChange} /> */}
-                            <DatePicker onChange={onChange} needConfirm />
+                            <DatePicker onChange={onChange}  disabledDate={disabledDate}  needConfirm />
                         </Form.Item>
 
                         <Form.Item
@@ -217,7 +230,7 @@ const AddBill = () => {
 
 
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                            <Button type="primary" htmlType="submit" onClick={handleSubmit}>
+                            <Button type="primary" htmlType="submit">
                                 Add
                             </Button>
                         </Form.Item>
