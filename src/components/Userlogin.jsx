@@ -47,10 +47,14 @@ const Userlogin = () => {
                 console.log('Login', data);
                 if (data.status) {
                     // setIsCreated(true);
-                    console.log('user login successfully', data.data);
+                    // console.log('user login successfully', data.data.user.user_type);
                     localStorage.setItem('userAuth', data.data.token);
-                    form.reset();
-                    setTimeout(() => navigate('/dashboard'),2000)
+                    // form.reset();
+                    if(data.data.user.user_type == 1){
+                       setTimeout(() => navigate('/admin/dashboard'),2000)
+                    }else{
+                       setTimeout(() => navigate('/dashboard'),2000)
+                    }
                     
                 }
             }
