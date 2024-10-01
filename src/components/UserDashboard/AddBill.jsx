@@ -38,7 +38,7 @@ const AddBill = () => {
 
     const [form] = Form.useForm();        // Access form instance
     const [isFormValid, setIsFormValid] = useState(null);
-    const [formPayload, setFormPayload] = useState({ billAmount: '', billDate: '', uploadRecipient: '' });
+    const [formPayload, setFormPayload] = useState({ amount: '', billDate: '', uploadRecipient: '' });
     const [successMessage, setSuccessMessage] = useState('LoggedIn successfully');
     const [isResponseGet, setIsResponseGet] = useState(false);
     const [alerType, setAlerType] = useState('success')
@@ -49,7 +49,28 @@ const AddBill = () => {
 
     const onFinish = (values) => {
         console.log('Form submitted:', values);
-        setIsFormValid(true);               // Set form as valid after successful submission
+        console.log('amint ', values.amount);
+        console.log('file ', values.fileUrl.file.thumbUrl);
+        // console.log('dsf ', values.fileUrl.file.thumbUrl);
+        setFormPayload((prev)=> {
+            return {
+                ...prev, amount: values.amount
+            }
+        });
+        setFormPayload((prev)=> {
+            return {
+                ...prev, billDate: Date.now()
+            }
+        });
+        setFormPayload((prev)=> {
+            return {
+                ...prev, uploadRecipient: 'values.amount'
+            }
+        });
+
+
+        setIsFormValid(true);    
+                   // Set form as valid after successful submission
         handleSubmit();
     };
 
@@ -81,27 +102,28 @@ const AddBill = () => {
 
     const handleSubmit = async () => {
         console.log('handleSubmit', APIBASEURL);
-        console.log('payload ', formPayload);
         setIsResponseGet(false);
         let form = document.getElementById('basic');
         try {
             if (isFormValid) {
                 let payload = {
-                    billAmount: formPayload.billAmount,
-                    billDate: formPayload.password,
-                    uploadRecipient: formPayload.uploadRecipient,
+                    amount: formPayload.amount,
+                    date: formPayload.billDate,
+                    receipt_url: formPayload.uploadRecipient,
 
                 }
-                const { data } = await axios.post(`${APIBASEURL}/user/login`, payload);
+                console.log('payload ', formPayload);
+
+                const { data } = await axios.post(`${APIBASEURL}/bills/save`, payload);
                 console.log('insert data api', data);
                 if (data.success) {
                     setIsResponseGet(true);
                     setSuccessMessage("LoggedIn successfully");
-                    console.log('user loggedin successfully', data);
+                    console.log('Expense added  successfully', data);
                     form.reset();
-                    localStorage.setItem('adminAuth', data.token);
+                    // localStorage.setItem('adminAuth', data.token);
                     // login(data.token)
-                    setTimeout(() => navigate('/dashboard/home'), 1000)
+                    // setTimeout(() => navigate('/dashboard/home'), 1000)
                     // navigate('/users');
 
                 }
