@@ -1,5 +1,5 @@
 import React from 'react'
-import { Skeleton, Space, Table } from 'antd';
+import { Image, Skeleton, Space, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Alert } from 'antd'
@@ -92,7 +92,15 @@ const ListBill = () => {
             dataIndex: 'id',
             key: 'id',
         },
+        {
+            title: 'Receipt',
+            dataIndex: 'receipt_url',
+            key: 'receipt_url',
+            render: (text) => ( <Image width={50} src={`${process.env.REACT_APP_IMAGE_BASE_URL}${text}`}
+                fallback="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg" /> ),
 
+                // render: (text) => ( <img src={`${process.env.REACT_APP_IMAGE_BASE_URL}${text}`} alt="profile" style={{ width: 100, height: 100, objectFit: 'cover' }} /> ),
+        },
         {
             title: 'Date',
             dataIndex: 'date',

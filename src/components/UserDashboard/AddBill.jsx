@@ -54,7 +54,7 @@ const AddBill = () => {
     };
 
 
-    // const { login } = useAuth();
+    
 
     const onFinish = (values) => {
         console.log('Form submitted:', values);
@@ -172,7 +172,7 @@ const AddBill = () => {
 
   <Row justify="center" align="middle" style={{ minHeight: "100vh", backgroundImage: 'url("https://img.freepik.com/free-photo/abstract-blue-geometric-shapes-background_24972-1841.jpg?w=1380&t=st=1727788655~exp=1727789255~hmac=946629e7c1f1c1891f7462efbd72cd14d9475917031eaa2d02fb030dceb879c8")', }}>
     <Col>
-      <div className="form-container">
+      <div className="form-container1">
         <h2 className="form-title">Submit Your Parking Bill</h2>
         <Form
           name="basic"

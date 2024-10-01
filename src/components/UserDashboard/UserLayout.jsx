@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
@@ -15,36 +15,39 @@ const UserLayout = () => {
   const navigate = useNavigate();
 
   const {
-      token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const onMenuClick = ({ key }) => {
-      console.log('key pressed', key);
-      if (key !== 'logout') {
-          navigate(key);
+    console.log('key pressed', key);
+    if (key !== 'logout') {
+      navigate(key);
 
-      }
-     
+    }
+
   };
 
   const logout = () => {
     console.log('logout called');
+    window.localStorage.clear();
     navigate('/logout');
 
+  }
 
-}
+    // const { login } = useAuth();
+    // useEffect(() => {
+    //   const isAuthenticated = !!localStorage.getItem('userAuth');  // Simple token-based check
+
+    //   if (!isAuthenticated) {
+    //     navigate('/login')
+    //   }
+
+    // }, [])
+
+
 
 
   const items = [
-    {
-      key: 'home',
-      label: (
-        <Link to='/dashboard/home'>
-          Dashboard
-        </Link>
-      ),
-      icon: <DashboardOutlined />
-    },
 
     {
       key: 'add-bill',
@@ -115,8 +118,8 @@ const UserLayout = () => {
                 margin: '16px 0',
               }}
             >
-              <Breadcrumb.Item>Admin</Breadcrumb.Item>
               <Breadcrumb.Item>User</Breadcrumb.Item>
+              <Breadcrumb.Item>Add Bill</Breadcrumb.Item>
             </Breadcrumb>
             <div
               style={{
