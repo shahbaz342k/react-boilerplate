@@ -48,12 +48,14 @@ const Userlogin = () => {
                 if (data.status) {
                     // setIsCreated(true);
                     // console.log('user login successfully', data.data.user.user_type);
-                    localStorage.setItem('userAuth', data.data.token);
-                    // form.reset();
                     if(data.data.user.user_type == 1){
+                        localStorage.setItem('adminAuth', data.data.token);
+                        form.reset();
                        setTimeout(() => navigate('/admin/dashboard'),2000)
                     }else{
-                       setTimeout(() => navigate('/dashboard'),2000)
+                        localStorage.setItem('userAuth', data.data.token);
+                        form.reset();
+                       setTimeout(() => navigate('/dashboard/home'),2000)
                     }
                     
                 }
