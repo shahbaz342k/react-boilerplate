@@ -29,6 +29,15 @@
     display: block;     /* Ensures the element behaves like a block */
     width: 100%;        /* Takes up full width to allow text centering */
 }
+.subtext{
+    text-align: center; /* For inline elements inside the block container */
+    display: block;     /* Ensures the element behaves like a block */
+    width: 100%;  
+    font-size: 20px;
+    font-weight: 700;
+    color: rgb(30, 24, 82);
+    
+}
   
   /* Form Section */
   .form-container {

@@ -64,7 +64,10 @@ const Userlogin = () => {
 <div className="content-container">
   <div className="form-container">
   <div className="title-container">
-    <h1 className="gradient-text">ParkEasy</h1>
+    <h1 className="gradient-text">ParkEasy
+        {/* <p className="subtext">By Nexus</p> */}
+    </h1>
+    {/* <h5  className="subtext">By Nexus</h5> */}
   </div>
     {/* <Card className="login-card" title="Parking Management System Login" bordered={false}> */}
     <Card
