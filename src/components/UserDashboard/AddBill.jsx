@@ -1,15 +1,44 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input, Alert } from 'antd'
-import { Col, Row, Space } from 'antd';
+import { Button, Form, Input, Alert, DatePicker } from 'antd'
+import { Col, Row, Space, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 const APIBASEURL = process.env.REACT_APP_API_URL;
 
-const Login = () => {
+const AddBill = () => {
+
+
+    const props = {
+        action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+        listType: 'picture',
+        beforeUpload(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const img = document.createElement('img');
+                    img.src = reader.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        ctx.fillStyle = 'red';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = '33px Arial';
+                        ctx.fillText('Ant Design', 20, 20);
+                        canvas.toBlob((result) => resolve(result));
+                    };
+                };
+            });
+        },
+    };
 
     const [form] = Form.useForm();        // Access form instance
     const [isFormValid, setIsFormValid] = useState(null);
-    const [creteUserPayload, setCreteUserPayload] = useState({ email: '', password: ''});
+    const [formPayload, setFormPayload] = useState({ billAmount: '', billDate: '', uploadRecipient: '' });
     const [successMessage, setSuccessMessage] = useState('LoggedIn successfully');
     const [isResponseGet, setIsResponseGet] = useState(false);
     const [alerType, setAlerType] = useState('success')
@@ -29,14 +58,18 @@ const Login = () => {
         setIsFormValid(false);              // Set form as invalid if validation fails
     };
 
-    
+    const onChange = (date, dateString) => {
+        console.log(date, dateString);
+      };
+
+
     const handleChange = (e) => {
 
 
         const { name, value } = e.target; // Get name and value from the input
 
         // Update state based on input
-        setCreteUserPayload((prevNames) => ({
+        setFormPayload((prevNames) => ({
             ...prevNames,  // Retain previous state
             [name]: value, // Update the property dynamically
         }));
@@ -44,24 +77,20 @@ const Login = () => {
 
     }
 
-    useEffect(() => {
-        const isAuthenticated = !!localStorage.getItem('adminAuth');  // Simple token-based check
-        console.log('Login ', isAuthenticated)
-        if (isAuthenticated) {
-            navigate('/dashboard/home')
-        }
-    }, [])
+
 
     const handleSubmit = async () => {
         console.log('handleSubmit', APIBASEURL);
-        console.log('payload ', creteUserPayload);
+        console.log('payload ', formPayload);
         setIsResponseGet(false);
         let form = document.getElementById('basic');
         try {
             if (isFormValid) {
                 let payload = {
-                    email: creteUserPayload.email,
-                    password: creteUserPayload.password,
+                    billAmount: formPayload.billAmount,
+                    billDate: formPayload.password,
+                    uploadRecipient: formPayload.uploadRecipient,
+
                 }
                 const { data } = await axios.post(`${APIBASEURL}/user/login`, payload);
                 console.log('insert data api', data);
@@ -87,7 +116,7 @@ const Login = () => {
         // const {data} = await axios.get(`${APIBASEURL}/users`);
         // console.log('data api', data);
     }
-   
+
 
 
     return (
@@ -131,36 +160,47 @@ const Login = () => {
                     >
 
                         <Form.Item
-                            label="Email"
-                            name="email"
-                            rules={[{ required: true, message: 'Please input your email!' }]}
+                            label="Add Amount"
+                            name="amount"
+                            rules={[{ required: true, message: 'Please input your amount!' }]}
                         >
-                            <Input name='email' onChange={handleChange} />
+                            <Input name='amount' onChange={handleChange} />
                         </Form.Item>
 
 
                         <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[{ required: true, message: 'Please input your password!' }]}
+                            label="Bill Date"
+                            name="bill_date"
+                            rules={[{ required: true, message: 'Please input your bill Date!' }]}
                         >
-                            <Input.Password name='password' onChange={handleChange} />
+                            {/* <Input name='bill_date' onChange={handleChange} /> */}
+                            <DatePicker onChange={onChange} needConfirm />
                         </Form.Item>
+
+                        <Form.Item
+                            label="Upload Reciept"
+                            name="fileUrl"
+                            rules={[{ required: true, message: 'Please input your Upload Receipt!' }]}
+                        >
+                                <Upload {...props} className='ml-10'>
+                                    <Button icon={<UploadOutlined />}>Upload</Button>
+                                </Upload>
+
+                           
+                        </Form.Item>
+
+
+
+
 
 
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                             <Button type="primary" htmlType="submit" onClick={handleSubmit}>
-                                Submit
+                                Add
                             </Button>
                         </Form.Item>
                     </Form>
 
-                    <div>
-                        <Link to={'/registration'}>
-                            Click here to register
-                        </Link>
-
-                    </div>
                 </Col>
 
             </Row>
@@ -170,4 +210,4 @@ const Login = () => {
         </>
     )
 }
-export default Login;
+export default AddBill;
